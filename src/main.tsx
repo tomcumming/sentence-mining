@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 
-import ReviewPreview from "./components/screens/review/preview";
+import ReviewTest from "./components/screens/review/test";
 import ReviewAssess from "./components/screens/review/assess";
 
 const exampleTokens = [
@@ -18,15 +18,9 @@ const exampleTokens = [
 ];
 
 ReactDOM.render(
-  /*
-  <ReviewPreview
+  <ReviewTest
     tokens={[...exampleTokens, " ", ...exampleTokens]}
     onContinue={() => console.log("pressed continue")}
-    onBack={() => console.log("on go back")}
-    onReplaySpeech={() => console.log("replay")}
-  />,
-  */
-  <ReviewAssess
     onBack={() => console.log("on go back")}
     onReplaySpeech={() => console.log("replay")}
   />,

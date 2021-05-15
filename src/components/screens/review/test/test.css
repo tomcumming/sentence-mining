@@ -1,9 +1,9 @@
-.review-preview-screen {
+.review-test-screen {
   display: grid;
   grid-template-rows: 1fr auto;
 }
 
-.review-preview-screen > ._back {
+.review-test-screen > ._back {
   position: fixed;
   top: 0;
   left: 0;
@@ -11,7 +11,7 @@
   margin: 8px 0 0 8px;
 }
 
-.review-preview-screen > ._replay {
+.review-test-screen > ._replay {
   position: fixed;
   top: 0;
   right: 0;
@@ -19,14 +19,14 @@
   margin: 8px 8px 0 0;
 }
 
-.review-preview-screen > ._btn-holder {
+.review-test-screen > ._btn-holder {
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: flex-end;
 }
 
-.review-preview-screen > ._btn-holder > button {
+.review-test-screen > ._btn-holder > button {
   appearance: none;
   background-color: transparent;
   border: 0;
@@ -36,7 +36,7 @@
   cursor: pointer;
 }
 
-.review-preview-screen > ._sentence {
+.review-test-screen > ._sentence {
   padding: 0 8px;
   display: flex;
   flex-direction: column;
@@ -44,7 +44,7 @@
   align-items: center;
 }
 
-.review-preview-screen > ._sentence > div {
+.review-test-screen > ._sentence > div {
   background-color: #ff000088;
   text-align: justify;
   font-size: 20px;

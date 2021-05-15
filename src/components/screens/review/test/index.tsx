@@ -9,7 +9,7 @@ export type Props = {
   onReplaySpeech?: () => void;
 };
 
-export default function Preview({
+export default function Test({
   tokens,
   onContinue,
   onBack,
@@ -18,7 +18,7 @@ export default function Preview({
   const tokensString = React.useMemo(() => tokens.join(""), [tokens]);
 
   return (
-    <div className="review-preview-screen">
+    <div className="review-test-screen">
       <div className="_sentence">
         <div>{tokensString}</div>
       </div>
