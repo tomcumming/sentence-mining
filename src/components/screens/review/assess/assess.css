@@ -17,3 +17,31 @@
   padding: 0;
   margin: 8px 8px 0 0;
 }
+
+.review-access-screen > ._sentence {
+  padding: 0 8px;
+  font-size: 20px;
+
+  justify-self: center;
+  align-self: center;
+}
+
+.review-access-screen > ._sentence > ._token {
+  display: inline-flex;
+  white-space: pre;
+}
+
+.review-access-screen__section {
+  background-color: #00000044;
+  margin-bottom: 2px;
+
+  cursor: pointer;
+}
+
+.review-access-screen__section._start {
+  border-radius: 8px 0 0 8px;
+}
+
+.review-access-screen__section._end {
+  border-radius: 0 8px 8px 0;
+}

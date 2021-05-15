@@ -1,26 +1,49 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 
-import ReviewTest from "./components/screens/review/test";
-import ReviewAssess from "./components/screens/review/assess";
+import ReviewAssess, {
+  LearnableSection,
+} from "./components/screens/review/assess";
 
 const exampleTokens = [
-  "This",
+  "The",
   " ",
-  "is",
+  "Foxes",
   " ",
-  "an",
+  "were",
   " ",
-  "example",
+  "indebted",
   " ",
-  "sentence",
+  "to",
+  " ",
+  "two",
+  " ",
+  "crucial",
+  " ",
+  "saves",
+  " ",
+  "from",
+  " ",
+  "keeper",
+  " ",
+  "Kasper",
+  " ",
+  "Schmeichel",
   ".",
 ];
 
+const exampleSections: LearnableSection[] = [
+  { start: 0, length: 3 },
+
+  // Showing overlap
+  { start: 12, length: 3 },
+  { start: 14, length: 3 },
+];
+
 ReactDOM.render(
-  <ReviewTest
-    tokens={[...exampleTokens, " ", ...exampleTokens]}
-    onContinue={() => console.log("pressed continue")}
+  <ReviewAssess
+    tokens={exampleTokens}
+    sections={exampleSections}
     onBack={() => console.log("on go back")}
     onReplaySpeech={() => console.log("replay")}
   />,
