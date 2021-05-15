@@ -1,5 +1,7 @@
 import * as React from "react";
 
+import RoundBtn from "../../round-btn";
+
 export type Props = {
   tokens: string[];
   onContinue: () => void;
@@ -18,9 +20,7 @@ export default function Preview({ tokens, onContinue, onReplaySpeech }: Props) {
         <button onClick={onContinue}>Touch to continue</button>
       </div>
       {onReplaySpeech && (
-        <button className="_replay" onClick={onReplaySpeech}>
-          🗣️
-        </button>
+        <RoundBtn icon="🗣️" onClick={onReplaySpeech} className="_replay" />
       )}
     </div>
   );

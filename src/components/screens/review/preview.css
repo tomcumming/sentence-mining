@@ -9,20 +9,6 @@
   right: 0;
   padding: 0;
   margin: 8px 8px 0 0;
-  appearance: none;
-  background-color: #00000044;
-  border: none;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  width: 56px;
-  height: 56px;
-  border-radius: 28px;
-  font-size: 28px;
-  cursor: pointer;
 }
 
 .review-preview-screen > ._btn-holder {
