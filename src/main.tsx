@@ -1,3 +1,26 @@
 import * as React from "react";
+import * as ReactDOM from "react-dom";
 
-console.log("it werx", <p>yes</p>);
+import ReviewPreview from "./components/screens/review/preview";
+
+const exampleTokens = [
+  "This",
+  " ",
+  "is",
+  " ",
+  "an",
+  " ",
+  "example",
+  " ",
+  "sentence",
+  ".",
+];
+
+ReactDOM.render(
+  <ReviewPreview
+    tokens={[...exampleTokens, " ", ...exampleTokens]}
+    onContinue={() => console.log("pressed continue")}
+    onReplaySpeech={() => console.log("replay")}
+  />,
+  document.getElementById("app")
+);

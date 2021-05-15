@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "dev": "esbuild src/main.tsx --servedir=www --outdir=www/js --bundle --format=esm --target=firefox88,chrome90,safari14",
+    "dev": "esbuild src/main.tsx src/style.css --servedir=www --outdir=www --bundle --format=esm --target=firefox88,chrome90,safari14",
     "format": "prettier -w .",
     "check": "tsc"
   },
