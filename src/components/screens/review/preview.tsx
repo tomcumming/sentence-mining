@@ -5,10 +5,16 @@ import RoundBtn from "../../round-btn";
 export type Props = {
   tokens: string[];
   onContinue: () => void;
+  onBack: () => void;
   onReplaySpeech?: () => void;
 };
 
-export default function Preview({ tokens, onContinue, onReplaySpeech }: Props) {
+export default function Preview({
+  tokens,
+  onContinue,
+  onBack,
+  onReplaySpeech,
+}: Props) {
   const tokensString = React.useMemo(() => tokens.join(""), [tokens]);
 
   return (
@@ -19,6 +25,7 @@ export default function Preview({ tokens, onContinue, onReplaySpeech }: Props) {
       <div className="_btn-holder">
         <button onClick={onContinue}>Touch to continue</button>
       </div>
+      <RoundBtn icon="🔙" onClick={onBack} className="_back" />
       {onReplaySpeech && (
         <RoundBtn icon="🗣️" onClick={onReplaySpeech} className="_replay" />
       )}

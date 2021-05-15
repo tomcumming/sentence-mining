@@ -3,6 +3,14 @@
   grid-template-rows: 1fr auto;
 }
 
+.review-preview-screen > ._back {
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding: 0;
+  margin: 8px 0 0 8px;
+}
+
 .review-preview-screen > ._replay {
   position: fixed;
   top: 0;
