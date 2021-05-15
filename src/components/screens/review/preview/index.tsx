@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import RoundBtn from "../../round-btn";
+import RoundBtn from "../../../round-btn";
 
 export type Props = {
   tokens: string[];

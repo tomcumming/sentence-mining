@@ -1,0 +1,19 @@
+.review-access-screen {
+  display: grid;
+}
+
+.review-access-screen > ._back {
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding: 0;
+  margin: 8px 0 0 8px;
+}
+
+.review-access-screen > ._replay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  padding: 0;
+  margin: 8px 8px 0 0;
+}

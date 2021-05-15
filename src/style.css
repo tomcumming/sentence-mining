@@ -1,3 +1,4 @@
-@import "./components/screens/review/preview.css";
+@import "./components/screens/review/preview/preview.css";
+@import "./components/screens/review/assess/assess.css";
 
 @import "./components/round-btn/round-btn.css";
