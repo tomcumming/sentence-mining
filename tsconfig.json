@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "noEmit": true,
+    "strict": true,
+    "moduleResolution": "Node",
+    "target": "ESNext",
+    "jsx": "react"
+  },
+  "include": ["src"]
+}

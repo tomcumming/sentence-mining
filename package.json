@@ -1,0 +1,18 @@
+{
+  "scripts": {
+    "dev": "esbuild src/main.tsx --servedir=www --outdir=www/js --bundle --format=esm --target=firefox88,chrome90,safari14",
+    "format": "prettier -w .",
+    "check": "tsc"
+  },
+  "devDependencies": {
+    "@types/react": "^17.0.5",
+    "@types/react-dom": "^17.0.5",
+    "esbuild": "^0.11.22",
+    "prettier": "^2.3.0",
+    "typescript": "^4.2.4"
+  },
+  "dependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  }
+}
