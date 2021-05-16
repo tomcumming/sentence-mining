@@ -1,15 +1,7 @@
 import * as React from "react";
+import { LearnableSection } from "../../../../data";
 
 import RoundBtn from "../../../round-btn";
-
-export type LearnableSection = {
-  /** The index of the first token of the section */
-  start: number;
-  /** The length in tokens of the learnable section */
-  length: number;
-
-  type: "character" | "word" | "phrase";
-};
 
 export type Props = {
   fontSize: "normal" | "characters";
@@ -19,55 +11,74 @@ export type Props = {
   onReplaySpeech?: () => void;
 };
 
-function indexSections(
+function sectionContains(
+  child: LearnableSection,
+  parent: LearnableSection
+): boolean {
+  return (
+    child.start >= parent.start &&
+    child.start + child.length <= parent.start + parent.length
+  );
+}
+
+export type RenderSection = {
+  render: boolean;
+  section: LearnableSection;
+};
+
+function* groupTokens(
   tokens: string[],
   sections: LearnableSection[]
-): Map<number, LearnableSection[]> {
-  let index = new Map<number, LearnableSection[]>();
+): Iterable<string | [string[], LearnableSection]> {
+  const sectionsIndex = new Map<number, LearnableSection>();
   for (const section of sections) {
-    for (
-      let idx = section.start;
-      idx < section.start + section.length;
-      idx += 1
-    ) {
-      const existing = index.get(idx) || [];
-      existing.push(section);
-      index.set(idx, existing);
+    const existing = sectionsIndex.get(section.start);
+    if (!existing || existing.length < section.length)
+      sectionsIndex.set(section.start, section);
+  }
+
+  let idx = 0;
+
+  while (idx < tokens.length) {
+    const currentSection = sectionsIndex.get(idx);
+    if (currentSection) {
+      yield [tokens.slice(idx, idx + currentSection.length), currentSection];
+      idx += currentSection.length;
+    } else {
+      yield tokens[idx];
+      idx += 1;
     }
   }
-  return index;
 }
 
 function Sentence({ tokens, sections }: Pick<Props, "tokens" | "sections">) {
-  const sectionIndex = React.useMemo(
-    () => indexSections(tokens, sections),
+  const groupedTokens = React.useMemo(
+    () => Array.from(groupTokens(tokens, sections)),
     [tokens, sections]
   );
 
-  const wrapToken =
-    (idx: number) =>
-    (
-      content: React.ReactChild,
-      section: LearnableSection
-    ): React.ReactChild => {
-      const className = [
-        "review-access-screen__section",
-        ...(section.start === idx ? ["_start"] : []),
-        ...(section.start + section.length - 1 === idx ? ["_end"] : []),
-      ].join(" ");
-      return <span className={className}>{content}</span>;
-    };
-
   return (
     <div className="_sentence">
-      {tokens.map((token, idx) => (
-        <span key={idx} className="_token" data-token-idx={idx}>
-          {(sectionIndex.get(idx) || []).reduce(
-            wrapToken(idx),
-            <span>{token}</span>
-          )}
-        </span>
-      ))}
+      {groupedTokens.map((tokenOrSection, idx) => {
+        if (typeof tokenOrSection === "string") {
+          return (
+            <span key={idx} className="_token">
+              {tokenOrSection}
+            </span>
+          );
+        } else {
+          const [tokens, section] = tokenOrSection;
+          return (
+            <span key={idx} className="_section">
+              {tokens.map((token, idx) => (
+                <span key={idx} className="_token">
+                  {token}
+                </span>
+              ))}
+            </span>
+          );
+        }
+      })}
     </div>
   );
 }

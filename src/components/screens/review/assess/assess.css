@@ -32,30 +32,8 @@
   font-size: 28px;
 }
 
-.review-access-screen > ._sentence > ._token {
-  display: inline-flex;
-  white-space: pre;
-}
-
-.review-access-screen__section {
+.review-access-screen > ._sentence > ._section {
   background-color: #00000044;
   cursor: pointer;
-}
-
-.review-access-screen__section > .review-access-screen__section {
-  background-color: #00000022;
-}
-
-._token > .review-access-screen__section {
-  margin-bottom: 2px;
-}
-
-.review-access-screen__section._start {
-  border-top-left-radius: 8px;
-  border-bottom-left-radius: 8px;
-}
-
-.review-access-screen__section._end {
-  border-top-right-radius: 8px;
-  border-bottom-right-radius: 8px;
+  border-radius: 8px;
 }
