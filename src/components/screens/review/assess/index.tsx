@@ -90,12 +90,16 @@ function Assess({ onBack, onReplaySpeech, fontSize, tokens, sections }: Props) {
         fontSize === "characters" ? "_characters" : ""
       }`}
     >
-      <Sentence tokens={tokens} sections={sections} />
-
-      <RoundBtn icon="🔙" onClick={onBack} className="_back" />
-      {onReplaySpeech && (
-        <RoundBtn icon="🗣️" onClick={onReplaySpeech} className="_replay" />
-      )}
+      <div className="_header">
+        <RoundBtn icon="🔙" onClick={onBack} className="_back" />
+        {onReplaySpeech && (
+          <RoundBtn icon="🗣️" onClick={onReplaySpeech} className="_replay" />
+        )}
+      </div>
+      <div className="_content">
+        <Sentence tokens={tokens} sections={sections} />
+        {/* This is where the review items will live */}
+      </div>
     </div>
   );
 }

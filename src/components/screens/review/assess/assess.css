@@ -1,38 +1,40 @@
 .review-access-screen {
+  overflow: hidden;
   display: grid;
+  grid-template-rows: auto 1fr;
 }
 
-.review-access-screen > ._back {
-  position: fixed;
-  top: 0;
-  left: 0;
-  padding: 0;
-  margin: 8px 0 0 8px;
+.review-access-screen > ._header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 8px;
 }
 
-.review-access-screen > ._replay {
-  position: fixed;
-  top: 0;
-  right: 0;
-  padding: 0;
-  margin: 8px 8px 0 0;
+.review-access-screen > ._content {
+  overflow: scroll;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
 }
 
-.review-access-screen > ._sentence {
-  margin-top: calc(56px + 8px * 2 + 32px);
-
+.review-access-screen > ._content > ._sentence {
   padding: 0 8px;
   font-size: 20px;
 
-  justify-self: center;
-  align-self: flex-start;
+  align-self: center;
+  text-align: justify;
 }
 
-.review-access-screen._characters > ._sentence {
+.review-access-screen._characters > ._content > ._sentence {
   font-size: 28px;
 }
 
-.review-access-screen > ._sentence > ._section {
+.review-access-screen > ._content > ._sentence > ._section {
   background-color: #00000044;
   cursor: pointer;
   border-radius: 8px;

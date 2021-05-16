@@ -5,7 +5,6 @@ import ReviewAssess from "./components/screens/review/assess";
 import ReviewTest from "./components/screens/review/test";
 import { LearnableSection } from "./data";
 
-/*
 const exampleTokens = ["起", "初", "，", "神", "創", "造", "天", "地", "。"];
 
 const exampleSections: LearnableSection[] = [
@@ -25,7 +24,8 @@ const exampleSections: LearnableSection[] = [
   // Just as an example
   { start: 4, length: 4, type: "phrase", key: ["創", "造", "天", "地"] },
 ];
-*/
+
+/*
 
 const exampleTokens = [
   "Differing",
@@ -71,6 +71,8 @@ const exampleSections: LearnableSection[] = [
 
   { start: 14, length: 3, type: "phrase", key: ["chinese", " ", "characters"] },
 ];
+
+*/
 
 ReactDOM.render(
   <ReviewAssess
