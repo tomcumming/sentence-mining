@@ -7,11 +7,13 @@ export type LearnableSection = {
   start: number;
   /** The length in tokens of the learnable section */
   length: number;
+
+  type: "character" | "word" | "phrase";
 };
 
 export type Props = {
+  fontSize: "normal" | "characters";
   tokens: string[];
-  /** Sorted (by start) list of learnable sections */
   sections: LearnableSection[];
   onBack: () => void;
   onReplaySpeech?: () => void;
@@ -70,9 +72,13 @@ function Sentence({ tokens, sections }: Pick<Props, "tokens" | "sections">) {
   );
 }
 
-function Assess({ onBack, onReplaySpeech, tokens, sections }: Props) {
+function Assess({ onBack, onReplaySpeech, fontSize, tokens, sections }: Props) {
   return (
-    <div className="review-access-screen">
+    <div
+      className={`review-access-screen ${
+        fontSize === "characters" ? "_characters" : ""
+      }`}
+    >
       <Sentence tokens={tokens} sections={sections} />
 
       <RoundBtn icon="🔙" onClick={onBack} className="_back" />

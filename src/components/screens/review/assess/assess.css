@@ -19,11 +19,17 @@
 }
 
 .review-access-screen > ._sentence {
+  margin-top: calc(56px + 8px * 2 + 32px);
+
   padding: 0 8px;
   font-size: 20px;
 
   justify-self: center;
-  align-self: center;
+  align-self: flex-start;
+}
+
+.review-access-screen._characters > ._sentence {
+  font-size: 28px;
 }
 
 .review-access-screen > ._sentence > ._token {
@@ -33,15 +39,23 @@
 
 .review-access-screen__section {
   background-color: #00000044;
-  margin-bottom: 2px;
-
   cursor: pointer;
 }
 
+.review-access-screen__section > .review-access-screen__section {
+  background-color: #00000022;
+}
+
+._token > .review-access-screen__section {
+  margin-bottom: 2px;
+}
+
 .review-access-screen__section._start {
-  border-radius: 8px 0 0 8px;
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
 }
 
 .review-access-screen__section._end {
-  border-radius: 0 8px 8px 0;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
 }

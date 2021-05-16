@@ -45,7 +45,10 @@
 }
 
 .review-test-screen > ._sentence > div {
-  background-color: #ff000088;
   text-align: justify;
   font-size: 20px;
+}
+
+.review-test-screen._characters > ._sentence > div {
+  font-size: 28px;
 }
