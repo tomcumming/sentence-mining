@@ -1,6 +1,6 @@
 export type LearnableKey = string[];
 
-export type LearnableSectionType = "word" | "phrase" | "reading";
+export type LearnableSectionType = "phrase" | "word" | "reading";
 
 /** These should only overlap if one is a subset of the other */
 export type LearnableSection = {

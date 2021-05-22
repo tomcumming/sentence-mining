@@ -11,47 +11,124 @@ export type Props = {
   onReplaySpeech?: () => void;
 };
 
-function sectionContains(
-  child: LearnableSection,
-  parent: LearnableSection
-): boolean {
-  return (
-    child.start >= parent.start &&
-    child.start + child.length <= parent.start + parent.length
-  );
+type OrganisedSection = {
+  section: LearnableSection;
+  children: OrganisedSection[];
+};
+
+function* orgSecAllChildren(os: OrganisedSection): Iterable<OrganisedSection> {
+  for (const c of os.children) {
+    yield c;
+    yield* orgSecAllChildren(c);
+  }
 }
 
-export type RenderSection = {
-  render: boolean;
-  section: LearnableSection;
-};
+function sectionContains(
+  parent: LearnableSection,
+  child: LearnableSection
+): boolean {
+  const overlaps =
+    parent.start <= child.start &&
+    parent.start + parent.length >= child.start + child.length;
+  const parentTypeGt =
+    parent.type === "phrase" ||
+    (parent.type === "word" && ["word", "reading"].includes(child.type)) ||
+    (parent.type === "reading" && child.type === "reading");
+  return overlaps && (parent.length > child.length || parentTypeGt);
+}
+
+function organiseSections(sections: LearnableSection[]): OrganisedSection[] {
+  const contains = new Map<LearnableSection, Set<LearnableSection>>();
+
+  // TODO optimize quadratic
+  for (const sectionLeft of sections) {
+    for (const sectionRight of sections) {
+      if (sectionLeft === sectionRight) continue;
+
+      if (sectionContains(sectionLeft, sectionRight)) {
+        const exists = contains.get(sectionLeft) || new Set();
+        exists.add(sectionRight);
+        contains.set(sectionLeft, exists);
+      }
+    }
+  }
+
+  function* allDesc(section: LearnableSection): Iterable<LearnableSection> {
+    for (const c of contains.get(section) || []) {
+      yield c;
+      yield* allDesc(c);
+    }
+  }
+
+  const pruned = new Map(
+    Array.from(contains).map(([parent, children]) => {
+      const kidsKids = new Set(
+        Array.from(children).flatMap((c) => Array.from(allDesc(c)))
+      );
+      return [
+        parent,
+        new Set(Array.from(children).filter((c) => !kidsKids.has(c))),
+      ];
+    })
+  );
+
+  const allChildren = new Set(
+    Array.from(pruned.values()).flatMap((cs) => Array.from(cs))
+  );
+  const roots = sections
+    .filter((c) => !allChildren.has(c))
+    .sort((a, b) => a.start - b.start);
+
+  function organised(section: LearnableSection): OrganisedSection {
+    return {
+      section,
+      children: Array.from(pruned.get(section) || [])
+        .map(organised)
+        .sort((a, b) => a.section.start - b.section.start),
+    };
+  }
+
+  return roots.map(organised);
+}
 
 function* groupTokens(
   tokens: string[],
-  sections: LearnableSection[]
-): Iterable<string | [string[], LearnableSection]> {
-  const sectionsIndex = new Map<number, LearnableSection>();
-  for (const section of sections) {
-    const existing = sectionsIndex.get(section.start);
-    if (!existing || existing.length < section.length)
-      sectionsIndex.set(section.start, section);
+  sections: OrganisedSection[]
+): Iterable<string | [string[], OrganisedSection]> {
+  let tokenIdx = 0;
+  let sectionsLeft = sections.slice();
+
+  while (true) {
+    const orgSection = sectionsLeft.shift();
+    if (!orgSection) break;
+
+    const { section } = orgSection;
+
+    while (tokenIdx < section.start) {
+      yield tokens[tokenIdx];
+      tokenIdx += 1;
+    }
+
+    yield [
+      tokens.slice(section.start, section.start + section.length),
+      orgSection,
+    ];
+    tokenIdx += section.length;
   }
 
-  let idx = 0;
-
-  while (idx < tokens.length) {
-    const currentSection = sectionsIndex.get(idx);
-    if (currentSection) {
-      yield [tokens.slice(idx, idx + currentSection.length), currentSection];
-      idx += currentSection.length;
-    } else {
-      yield tokens[idx];
-      idx += 1;
-    }
+  while (tokenIdx < tokens.length) {
+    yield tokens[tokenIdx];
+    tokenIdx += 1;
   }
 }
 
-function Sentence({ tokens, sections }: Pick<Props, "tokens" | "sections">) {
+function Sentence({
+  tokens,
+  sections,
+}: {
+  tokens: string[];
+  sections: OrganisedSection[];
+}) {
   const groupedTokens = React.useMemo(
     () => Array.from(groupTokens(tokens, sections)),
     [tokens, sections]
@@ -84,6 +161,13 @@ function Sentence({ tokens, sections }: Pick<Props, "tokens" | "sections">) {
 }
 
 function Assess({ onBack, onReplaySpeech, fontSize, tokens, sections }: Props) {
+  const organisedSections = React.useMemo(
+    () => organiseSections(sections),
+    [sections]
+  );
+
+  debugger;
+
   return (
     <div
       className={`review-access-screen ${
@@ -97,7 +181,7 @@ function Assess({ onBack, onReplaySpeech, fontSize, tokens, sections }: Props) {
         )}
       </div>
       <div className="_content">
-        <Sentence tokens={tokens} sections={sections} />
+        <Sentence tokens={tokens} sections={organisedSections} />
         {/* This is where the review items will live */}
       </div>
     </div>
