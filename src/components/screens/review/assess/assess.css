@@ -35,7 +35,18 @@
 }
 
 .review-access-screen > ._content > ._sentence > ._section {
-  background-color: #00000044;
   cursor: pointer;
   border-radius: 8px;
+}
+
+.review-access-screen > ._content > ._sentence > ._section._phrase {
+  background-color: hsl(var(--yellow), 100%, 70%);
+}
+
+.review-access-screen > ._content > ._sentence > ._section._word {
+  background-color: hsl(var(--pink), 100%, 70%);
+}
+
+.review-access-screen > ._content > ._sentence > ._section._reading {
+  background-color: hsl(var(--blue), 100%, 70%);
 }

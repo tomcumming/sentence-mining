@@ -2,3 +2,11 @@
 @import "./components/screens/review/assess/assess.css";
 
 @import "./components/round-btn/round-btn.css";
+
+#app {
+  --yellow: 41;
+  --orange: 23;
+  --pink: 331;
+  --purple: 251;
+  --blue: 223;
+}

@@ -144,9 +144,15 @@ function Sentence({
             </span>
           );
         } else {
-          const [tokens, section] = tokenOrSection;
+          const [tokens, { section }] = tokenOrSection;
+          const sectionClass =
+            section.type === "phrase"
+              ? "_phrase"
+              : section.type === "word"
+              ? "_word"
+              : "_reading";
           return (
-            <span key={idx} className="_section">
+            <span key={idx} className={`_section ${sectionClass}`}>
               {tokens.map((token, idx) => (
                 <span key={idx} className="_token">
                   {token}
@@ -165,8 +171,6 @@ function Assess({ onBack, onReplaySpeech, fontSize, tokens, sections }: Props) {
     () => organiseSections(sections),
     [sections]
   );
-
-  debugger;
 
   return (
     <div
