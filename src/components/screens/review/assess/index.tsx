@@ -1,5 +1,5 @@
 import * as React from "react";
-import { LearnableSection } from "../../../../data";
+import { keyToString, LearnableKey, LearnableSection } from "../../../../data";
 
 import RoundBtn from "../../../round-btn";
 
@@ -91,12 +91,26 @@ function organiseSections(sections: LearnableSection[]): OrganisedSection[] {
   return roots.map(organised);
 }
 
+function* unselectedSections(
+  selectedKeys: Set<string>,
+  sections: OrganisedSection[]
+): Iterable<OrganisedSection> {
+  for (const section of sections) {
+    if (selectedKeys.has(keyToString(section.section.key)))
+      yield* unselectedSections(selectedKeys, section.children);
+    else yield section;
+  }
+}
+
 function* groupTokens(
   tokens: string[],
-  sections: OrganisedSection[]
+  allSections: OrganisedSection[],
+  selectedKeys: Set<string>
 ): Iterable<string | [string[], OrganisedSection]> {
+  const unSelected = Array.from(unselectedSections(selectedKeys, allSections));
+
   let tokenIdx = 0;
-  let sectionsLeft = sections.slice();
+  let sectionsLeft = unSelected.slice();
 
   while (true) {
     const orgSection = sectionsLeft.shift();
@@ -125,13 +139,17 @@ function* groupTokens(
 function Sentence({
   tokens,
   sections,
+  selectedKeys,
+  onClickSection,
 }: {
   tokens: string[];
   sections: OrganisedSection[];
+  selectedKeys: Set<string>;
+  onClickSection: (keyStr: LearnableKey) => void;
 }) {
   const groupedTokens = React.useMemo(
-    () => Array.from(groupTokens(tokens, sections)),
-    [tokens, sections]
+    () => Array.from(groupTokens(tokens, sections, selectedKeys)),
+    [tokens, sections, selectedKeys]
   );
 
   return (
@@ -144,15 +162,14 @@ function Sentence({
             </span>
           );
         } else {
-          const [tokens, { section }] = tokenOrSection;
-          const sectionClass =
-            section.type === "phrase"
-              ? "_phrase"
-              : section.type === "word"
-              ? "_word"
-              : "_reading";
+          const [tokens, section] = tokenOrSection;
+          const sectionClass = `_${section.section.type}`;
           return (
-            <span key={idx} className={`_section ${sectionClass}`}>
+            <span
+              key={idx}
+              className={`_section ${sectionClass}`}
+              onClick={() => onClickSection(section.section.key)}
+            >
               {tokens.map((token, idx) => (
                 <span key={idx} className="_token">
                   {token}
@@ -172,6 +189,15 @@ function Assess({ onBack, onReplaySpeech, fontSize, tokens, sections }: Props) {
     [sections]
   );
 
+  const [selected, setSelected] = React.useState(new Set<string>());
+
+  const onSelectSection = React.useCallback(
+    (keyStr: LearnableKey) => {
+      setSelected((existing) => new Set([...existing, keyToString(keyStr)]));
+    },
+    [setSelected]
+  );
+
   return (
     <div
       className={`review-access-screen ${
@@ -185,7 +211,12 @@ function Assess({ onBack, onReplaySpeech, fontSize, tokens, sections }: Props) {
         )}
       </div>
       <div className="_content">
-        <Sentence tokens={tokens} sections={organisedSections} />
+        <Sentence
+          tokens={tokens}
+          sections={organisedSections}
+          selectedKeys={selected}
+          onClickSection={onSelectSection}
+        />
         {/* This is where the review items will live */}
       </div>
     </div>

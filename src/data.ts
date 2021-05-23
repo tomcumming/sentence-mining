@@ -12,3 +12,7 @@ export type LearnableSection = {
   type: LearnableSectionType;
   key: LearnableKey;
 };
+
+export function keyToString(key: LearnableKey): string {
+  return JSON.stringify(key);
+}

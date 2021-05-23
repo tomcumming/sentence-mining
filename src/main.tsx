@@ -8,21 +8,26 @@ import { LearnableSection } from "./data";
 const exampleTokens = ["起", "初", "，", "神", "創", "造", "天", "地", "。"];
 
 const exampleSections: LearnableSection[] = [
-  { start: 0, length: 1, type: "reading", key: ["起"] },
-  { start: 1, length: 1, type: "reading", key: ["初"] },
-  { start: 3, length: 1, type: "reading", key: ["神"] },
-  { start: 4, length: 1, type: "reading", key: ["創"] },
-  { start: 5, length: 1, type: "reading", key: ["造"] },
-  { start: 6, length: 1, type: "reading", key: ["天"] },
-  { start: 7, length: 1, type: "reading", key: ["地"] },
+  { start: 0, length: 1, type: "reading", key: ["reading", "起"] },
+  { start: 1, length: 1, type: "reading", key: ["reading", "初"] },
+  { start: 3, length: 1, type: "reading", key: ["reading", "神"] },
+  { start: 4, length: 1, type: "reading", key: ["reading", "創"] },
+  { start: 5, length: 1, type: "reading", key: ["reading", "造"] },
+  { start: 6, length: 1, type: "reading", key: ["reading", "天"] },
+  { start: 7, length: 1, type: "reading", key: ["reading", "地"] },
 
-  { start: 0, length: 2, type: "word", key: ["起", "初"] },
-  { start: 3, length: 1, type: "word", key: ["神"] },
-  { start: 4, length: 2, type: "word", key: ["創", "造"] },
-  { start: 6, length: 2, type: "word", key: ["天", "地"] },
+  { start: 0, length: 2, type: "word", key: ["word", "起", "初"] },
+  { start: 3, length: 1, type: "word", key: ["word", "神"] },
+  { start: 4, length: 2, type: "word", key: ["word", "創", "造"] },
+  { start: 6, length: 2, type: "word", key: ["word", "天", "地"] },
 
   // Just as an example
-  { start: 4, length: 4, type: "phrase", key: ["創", "造", "天", "地"] },
+  {
+    start: 4,
+    length: 4,
+    type: "phrase",
+    key: ["phrase", "創", "造", "天", "地"],
+  },
 ];
 
 /*
