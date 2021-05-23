@@ -164,11 +164,11 @@ function Sentence({
           );
         } else {
           const [tokens, section] = tokenOrSection;
-          const sectionClass = `_${section.section.type}`;
           return (
             <span
               key={idx}
-              className={`_section ${sectionClass}`}
+              className="_section"
+              data-type={section.section.type}
               onClick={() => onClickSection(section.section.key)}
             >
               {tokens.map((token, idx) => (
@@ -180,6 +180,38 @@ function Sentence({
           );
         }
       })}
+    </div>
+  );
+}
+
+function ForReview({
+  sections,
+  selected,
+}: {
+  sections: OrganisedSection[];
+  selected: Set<Json<LearnableKey>>;
+}) {
+  const flatSections = React.useMemo(() => {
+    function* go(sections: OrganisedSection[]): Iterable<LearnableSection> {
+      for (const section of sections) {
+        if (selected.has(Json.stringify(section.section.key)))
+          yield section.section;
+        yield* go(section.children);
+      }
+    }
+    return Array.from(go(sections));
+  }, [sections, selected]);
+
+  return (
+    <div className="_review">
+      <div>For Review:</div>
+      <ul>
+        {flatSections.map((section) => (
+          <li key={JSON.stringify(section.key)} data-type={section.type}>
+            {section.key.slice(1).join("")}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
@@ -221,7 +253,7 @@ function Assess({ onBack, onReplaySpeech, fontSize, tokens, sections }: Props) {
           selectedKeys={selected}
           onClickSection={onSelectSection}
         />
-        {/* This is where the review items will live */}
+        <ForReview sections={organisedSections} selected={selected} />
       </div>
     </div>
   );

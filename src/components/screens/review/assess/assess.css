@@ -39,14 +39,29 @@
   border-radius: 8px;
 }
 
-.review-access-screen > ._content > ._sentence > ._section._phrase {
+.review-access-screen > ._content > ._sentence > ._section[data-type="phrase"] {
   background-color: hsl(var(--yellow), 100%, 75%);
 }
 
-.review-access-screen > ._content > ._sentence > ._section._word {
+.review-access-screen > ._content > ._sentence > ._section[data-type="word"] {
   background-color: hsl(var(--pink), 100%, 75%);
 }
 
-.review-access-screen > ._content > ._sentence > ._section._reading {
+.review-access-screen
+  > ._content
+  > ._sentence
+  > ._section[data-type="reading"] {
+  background-color: hsl(var(--blue), 100%, 75%);
+}
+
+.review-access-screen > ._content > ._review > ul > li[data-type="phrase"] {
+  background-color: hsl(var(--yellow), 100%, 75%);
+}
+
+.review-access-screen > ._content > ._review > ul > li[data-type="word"] {
+  background-color: hsl(var(--pink), 100%, 75%);
+}
+
+.review-access-screen > ._content > ._review > ul > li[data-type="reading"] {
   background-color: hsl(var(--blue), 100%, 75%);
 }
