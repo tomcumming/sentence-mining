@@ -1,5 +1,6 @@
 import * as React from "react";
-import { keyToString, LearnableKey, LearnableSection } from "../../../../data";
+import type { LearnableKey, LearnableSection } from "../../../../data";
+import { Json } from "../../../../json";
 
 import RoundBtn from "../../../round-btn";
 
@@ -92,11 +93,11 @@ function organiseSections(sections: LearnableSection[]): OrganisedSection[] {
 }
 
 function* unselectedSections(
-  selectedKeys: Set<string>,
+  selectedKeys: Set<Json<LearnableKey>>,
   sections: OrganisedSection[]
 ): Iterable<OrganisedSection> {
   for (const section of sections) {
-    if (selectedKeys.has(keyToString(section.section.key)))
+    if (selectedKeys.has(Json.stringify(section.section.key)))
       yield* unselectedSections(selectedKeys, section.children);
     else yield section;
   }
@@ -105,7 +106,7 @@ function* unselectedSections(
 function* groupTokens(
   tokens: string[],
   allSections: OrganisedSection[],
-  selectedKeys: Set<string>
+  selectedKeys: Set<Json<LearnableKey>>
 ): Iterable<string | [string[], OrganisedSection]> {
   const unSelected = Array.from(unselectedSections(selectedKeys, allSections));
 
@@ -144,8 +145,8 @@ function Sentence({
 }: {
   tokens: string[];
   sections: OrganisedSection[];
-  selectedKeys: Set<string>;
-  onClickSection: (keyStr: LearnableKey) => void;
+  selectedKeys: Set<Json<LearnableKey>>;
+  onClickSection: (key: LearnableKey) => void;
 }) {
   const groupedTokens = React.useMemo(
     () => Array.from(groupTokens(tokens, sections, selectedKeys)),
@@ -189,11 +190,14 @@ function Assess({ onBack, onReplaySpeech, fontSize, tokens, sections }: Props) {
     [sections]
   );
 
-  const [selected, setSelected] = React.useState(new Set<string>());
+  const [selected, setSelected] = React.useState(new Set<Json<LearnableKey>>());
+  const [forReview, setForReview] = React.useState(
+    new Set<Json<LearnableKey>>()
+  );
 
   const onSelectSection = React.useCallback(
-    (keyStr: LearnableKey) => {
-      setSelected((existing) => new Set([...existing, keyToString(keyStr)]));
+    (key: LearnableKey) => {
+      setSelected((existing) => new Set([...existing, Json.stringify(key)]));
     },
     [setSelected]
   );
