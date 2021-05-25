@@ -187,9 +187,13 @@ function Sentence({
 function ForReview({
   sections,
   selected,
+  marked,
+  onMark,
 }: {
   sections: OrganisedSection[];
   selected: Set<Json<LearnableKey>>;
+  marked: Set<Json<LearnableKey>>;
+  onMark: (key: LearnableKey, mark: boolean) => void;
 }) {
   const flatSections = React.useMemo(() => {
     function* go(sections: OrganisedSection[]): Iterable<LearnableSection> {
@@ -204,14 +208,26 @@ function ForReview({
 
   return (
     <div className="_review">
-      <div>For Review:</div>
-      <ul>
-        {flatSections.map((section) => (
-          <li key={JSON.stringify(section.key)} data-type={section.type}>
-            {section.key.slice(1).join("")}
-          </li>
-        ))}
-      </ul>
+      <h4>For Review:</h4>
+      <div>
+        {flatSections.map((section) => {
+          const keyStr = JSON.stringify(section.key);
+          const toggleId = `for-review-${keyStr}`;
+          return (
+            <label key={keyStr} htmlFor={toggleId} data-type={section.type}>
+              <input
+                id={toggleId}
+                type="checkbox"
+                checked={marked.has(Json.stringify(section.key))}
+                onChange={(e) => onMark(section.key, e.currentTarget.checked)}
+              />
+              <div>
+                {section.key.slice(1).join("")} {section.type}
+              </div>
+            </label>
+          );
+        })}
+      </div>
     </div>
   );
 }
@@ -223,15 +239,27 @@ function Assess({ onBack, onReplaySpeech, fontSize, tokens, sections }: Props) {
   );
 
   const [selected, setSelected] = React.useState(new Set<Json<LearnableKey>>());
-  const [forReview, setForReview] = React.useState(
-    new Set<Json<LearnableKey>>()
-  );
+  const [marked, setMarked] = React.useState(new Set<Json<LearnableKey>>());
 
   const onSelectSection = React.useCallback(
     (key: LearnableKey) => {
       setSelected((existing) => new Set([...existing, Json.stringify(key)]));
+      setMarked((marked) => new Set([...marked, Json.stringify(key)]));
     },
-    [setSelected]
+    [setSelected, setMarked]
+  );
+
+  const onMark = React.useCallback(
+    (key: LearnableKey, mark: boolean) => {
+      if (mark)
+        setMarked((marked) => new Set([...marked, Json.stringify(key)]));
+      else
+        setMarked(
+          (marked) =>
+            new Set([...marked].filter((m) => m !== Json.stringify(key)))
+        );
+    },
+    [setMarked]
   );
 
   return (
@@ -253,7 +281,12 @@ function Assess({ onBack, onReplaySpeech, fontSize, tokens, sections }: Props) {
           selectedKeys={selected}
           onClickSection={onSelectSection}
         />
-        <ForReview sections={organisedSections} selected={selected} />
+        <ForReview
+          sections={organisedSections}
+          selected={selected}
+          marked={marked}
+          onMark={onMark}
+        />
       </div>
     </div>
   );

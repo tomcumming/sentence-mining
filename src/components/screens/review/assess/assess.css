@@ -54,14 +54,56 @@
   background-color: hsl(var(--blue), 100%, 75%);
 }
 
-.review-access-screen > ._content > ._review > ul > li[data-type="phrase"] {
+.review-access-screen > ._content > ._review > h4 {
+  padding: 0 8px;
+}
+
+.review-access-screen > ._content > ._review > div {
+  margin: 0;
+  padding: 0 8px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  row-gap: 8px;
+}
+
+.review-access-screen > ._content > ._review > div > label {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  padding: 8px;
+  border-radius: 8px;
+
+  cursor: pointer;
+}
+
+.review-access-screen > ._content > ._review > div > label > input {
+  width: 24px;
+  height: 24px;
+  margin: 0 8px 0 0;
+}
+
+.review-access-screen > ._content > ._review > div > label > div {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.review-access-screen > ._content > ._review > div > label[data-type="phrase"] {
   background-color: hsl(var(--yellow), 100%, 75%);
 }
 
-.review-access-screen > ._content > ._review > ul > li[data-type="word"] {
+.review-access-screen > ._content > ._review > div > label[data-type="word"] {
   background-color: hsl(var(--pink), 100%, 75%);
 }
 
-.review-access-screen > ._content > ._review > ul > li[data-type="reading"] {
+.review-access-screen
+  > ._content
+  > ._review
+  > div
+  > label[data-type="reading"] {
   background-color: hsl(var(--blue), 100%, 75%);
 }
