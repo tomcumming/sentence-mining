@@ -28,6 +28,8 @@
 
   align-self: center;
   text-align: justify;
+
+  user-select: none;
 }
 
 .review-access-screen._characters > ._content > ._sentence {
