@@ -1,7 +1,7 @@
 import * as React from "react";
 import type { LearnableKey, LearnableSection } from "../../../../data";
 import { Json } from "../../../../json";
-
+import { OrganisedSection, organiseSections } from "./organise";
 import RoundBtn from "../../../round-btn";
 
 export type Props = {
@@ -10,11 +10,6 @@ export type Props = {
   sections: LearnableSection[];
   onBack: () => void;
   onReplaySpeech?: () => void;
-};
-
-type OrganisedSection = {
-  section: LearnableSection;
-  children: OrganisedSection[];
 };
 
 function* orgSecAllChildren(os: OrganisedSection): Iterable<OrganisedSection> {
@@ -36,60 +31,6 @@ function sectionContains(
     (parent.type === "word" && ["word", "reading"].includes(child.type)) ||
     (parent.type === "reading" && child.type === "reading");
   return overlaps && (parent.length > child.length || parentTypeGt);
-}
-
-function organiseSections(sections: LearnableSection[]): OrganisedSection[] {
-  const contains = new Map<LearnableSection, Set<LearnableSection>>();
-
-  // TODO optimize quadratic
-  for (const sectionLeft of sections) {
-    for (const sectionRight of sections) {
-      if (sectionLeft === sectionRight) continue;
-
-      if (sectionContains(sectionLeft, sectionRight)) {
-        const exists = contains.get(sectionLeft) || new Set();
-        exists.add(sectionRight);
-        contains.set(sectionLeft, exists);
-      }
-    }
-  }
-
-  function* allDesc(section: LearnableSection): Iterable<LearnableSection> {
-    for (const c of contains.get(section) || []) {
-      yield c;
-      yield* allDesc(c);
-    }
-  }
-
-  const pruned = new Map(
-    Array.from(contains).map(([parent, children]) => {
-      const kidsKids = new Set(
-        Array.from(children).flatMap((c) => Array.from(allDesc(c)))
-      );
-      return [
-        parent,
-        new Set(Array.from(children).filter((c) => !kidsKids.has(c))),
-      ];
-    })
-  );
-
-  const allChildren = new Set(
-    Array.from(pruned.values()).flatMap((cs) => Array.from(cs))
-  );
-  const roots = sections
-    .filter((c) => !allChildren.has(c))
-    .sort((a, b) => a.start - b.start);
-
-  function organised(section: LearnableSection): OrganisedSection {
-    return {
-      section,
-      children: Array.from(pruned.get(section) || [])
-        .map(organised)
-        .sort((a, b) => a.section.start - b.section.start),
-    };
-  }
-
-  return roots.map(organised);
 }
 
 function* unselectedSections(
