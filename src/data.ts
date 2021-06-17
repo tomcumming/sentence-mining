@@ -12,3 +12,9 @@ export type LearnableSection = {
   type: LearnableSectionType;
   key: LearnableKey;
 };
+
+/** Normalised token for search */
+export type KeyToken = string;
+
+export const keyStartsWith = (keys: KeyToken[], start: KeyToken[]) =>
+  start.length <= keys.length && start.every((k, idx) => k === keys[idx]);
