@@ -3,6 +3,7 @@ import {
   DisplayToken,
   LearnableType,
   tokenIsWhitespace,
+  TypedUID,
 } from "../../../../data";
 
 import RoundBtn from "../../../round-btn";
@@ -15,7 +16,12 @@ export type Props = {
   learnableTypes: LearnableType[];
 };
 
-type State = { setLength: true } | { setType: { length: number } };
+type SetSummaryState = { length: number; type: LearnableType };
+
+type State =
+  | { setLength: true }
+  | { setType: { length: number } }
+  | { setSummary: SetSummaryState };
 
 function SetLength({
   onSetLength,
@@ -77,8 +83,10 @@ function SetType({
   offset,
   length,
   learnableTypes,
+  onSetType,
 }: {
   length: number;
+  onSetType: (length: number, type: LearnableType) => void;
 } & Pick<Props, "offset" | "tokens" | "learnableTypes">) {
   const selectedTokens = React.useMemo(
     () => tokens.slice(offset, offset + length),
@@ -96,11 +104,57 @@ function SetType({
           <button
             key={lt.uid.toString()}
             data-uid={lt.uid}
-            className={`basic-button _theme-${lt.themeColor}`}
+            className={`basic-button`}
+            style={{
+              backgroundColor: `hsl(var(--theme-color-${lt.themeColor}), 100%, 70%)`,
+            }}
+            onClick={() => onSetType(length, lt)}
           >
             {lt.name}
           </button>
         ))}
+      </div>
+    </section>
+  );
+}
+
+function SetSummary({
+  tokens,
+  offset,
+  state,
+}: {
+  state: SetSummaryState;
+} & Pick<Props, "tokens" | "offset">) {
+  const { length, type } = state;
+
+  const selectedTokens = React.useMemo(
+    () => tokens.slice(offset, offset + length),
+    [tokens, offset, length]
+  );
+
+  const [summary, setSummary] = React.useState("");
+
+  return (
+    <section>
+      <div className="_sentence">
+        <span
+          className="_selected"
+          style={{
+            backgroundColor: `hsl(var(--theme-color-${type.themeColor}), 100%, 70%)`,
+          }}
+        >
+          {selectedTokens.reduce((p, c) => p + c.text, "")}
+        </span>
+      </div>
+      <textarea
+        className="basic-textarea _summary"
+        placeholder="Summary"
+        value={summary}
+        onChange={(e) => setSummary(e.currentTarget.value)}
+      />
+      <div className="_finish-buttons">
+        <button className="basic-button">Finish ✔️</button>
+        <button className="basic-button">Add Children ➕</button>
       </div>
     </section>
   );
@@ -119,6 +173,12 @@ export default function AddLearnableScreen({
     []
   );
 
+  const onSetType = React.useCallback(
+    (length: number, type: LearnableType) =>
+      setState({ setSummary: { length, type } }),
+    []
+  );
+
   return (
     <main className="edit-learnables-screen _add">
       <nav>
@@ -133,7 +193,11 @@ export default function AddLearnableScreen({
           offset={offset}
           length={state.setType.length}
           learnableTypes={learnableTypes}
+          onSetType={onSetType}
         />
+      )}
+      {"setSummary" in state && (
+        <SetSummary tokens={tokens} offset={offset} state={state.setSummary} />
       )}
     </main>
   );

@@ -60,3 +60,17 @@
   align-items: center;
   gap: 8px;
 }
+
+.edit-learnables-screen._add > section > ._summary {
+  margin: 8px;
+  min-height: 48px;
+  box-sizing: content-box;
+}
+
+.edit-learnables-screen._add > section > ._finish-buttons {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+}
