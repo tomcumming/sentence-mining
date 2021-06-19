@@ -1,20 +1,11 @@
-export type LearnableKey = string[];
+import { UID } from "./uid";
 
-export type LearnableSectionType = "phrase" | "word" | "reading";
-
-/** These should only overlap if one is a subset of the other */
-export type LearnableSection = {
-  /** Token start index */
-  start: number;
-  /** Length in tokens */
-  length: number;
-
-  type: LearnableSectionType;
-  key: LearnableKey;
-};
+export type TypedUID<T extends string> = UID & { __type: T };
 
 /** Normalised token for search */
 export type KeyToken = string;
 
 export const keyStartsWith = (keys: KeyToken[], start: KeyToken[]) =>
   start.length <= keys.length && start.every((k, idx) => k === keys[idx]);
+
+export type Learnable = [KeyToken[], TypedUID<"Information">];

@@ -1,13 +1,12 @@
 ## Entities
 
-- `Learnable`
-- `LearnableType`
+- `Learnable : (Token[], Information)`
+- `Information : UID`
+- `InformationType : UID`
 
-| Name                    | Type                                 |
-| ----------------------- | ------------------------------------ |
-| Learnable Tokens        | `Learnable -> Token[]`               |
-| Learnable Type          | ` Learnable -> LearnableType`        |
-| Learnable Children      | `Learnable -> (Offset, Learnable){}` |
-| Learnable Short Summary | `Learnable -> String`                |
-| -                       | -                                    |
-| LearnableType Name      | `LearnableType -> String`            |
+| Name                 | Type                             |
+| -------------------- | -------------------------------- |
+| Information Summary  | `Information -> String`          |
+| Information Type     | `Information -> InformationType` |
+| -                    | -                                |
+| InformationType Name | `InformationType -> String`      |

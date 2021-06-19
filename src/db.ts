@@ -1,4 +1,4 @@
-import { keyStartsWith, KeyToken } from "./data";
+import { keyStartsWith, KeyToken, Learnable, TypedUID } from "./data";
 import { UID } from "./uid";
 
 const dbName = `SentenceMiningDB`;
@@ -7,7 +7,8 @@ const latestVersion = 1;
 const fieldOf = <T>(x: keyof T & string): string => x;
 
 type LearnableObject = {
-  primaryKey: [KeyToken[], UID];
+  primaryKey: Learnable;
+  children: LearnableObject[];
 };
 
 const learnableObjectStore = {
@@ -15,7 +16,7 @@ const learnableObjectStore = {
 };
 
 type InformationTypeObject = {
-  primaryKey: UID;
+  primaryKey: TypedUID<"InformationType">;
   name: string;
 };
 
@@ -24,8 +25,8 @@ const informationTypeObjectStore = {
 };
 
 type InformationObject = {
-  primaryKey: UID;
-  type: UID;
+  primaryKey: TypedUID<"Information">;
+  type: TypedUID<"InformationType">;
   summary: string;
 };
 
@@ -45,7 +46,7 @@ function updateDb(this: IDBOpenDBRequest, ev: IDBVersionChangeEvent) {
 
 export type MatchedLearnable = {
   tokenLength: number;
-  information: UID;
+  information: TypedUID<"Information">;
 };
 
 export class DB {
@@ -78,8 +79,7 @@ export class DB {
       req.onsuccess = () => {
         if (!req.result) return res(matching);
 
-        const [learnableTokens, infoId] = req.result
-          .primaryKey as LearnableObject["primaryKey"];
+        const [learnableTokens, infoId] = req.result.primaryKey as Learnable;
 
         if (keyStartsWith(tokens, learnableTokens))
           matching.push({

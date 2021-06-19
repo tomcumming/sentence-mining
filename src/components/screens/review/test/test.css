@@ -35,20 +35,3 @@
   color: #666;
   cursor: pointer;
 }
-
-.review-test-screen > ._sentence {
-  padding: 0 8px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.review-test-screen > ._sentence > div {
-  text-align: justify;
-  font-size: 20px;
-}
-
-.review-test-screen._characters > ._sentence > div {
-  font-size: 28px;
-}
