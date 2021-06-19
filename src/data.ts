@@ -18,3 +18,11 @@ export type DisplayToken = {
 export function tokenIsWhitespace(token: KeyToken) {
   return token === " ";
 }
+
+export type LearnableType = {
+  uid: TypedUID<"LearnableType">;
+  shortName: string;
+  name: string;
+  sortOrder: number;
+  themeColor: number;
+};
