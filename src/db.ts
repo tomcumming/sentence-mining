@@ -1,4 +1,5 @@
 import { keyStartsWith, KeyToken } from "./data";
+import { UID } from "./uid";
 
 const dbName = `SentenceMiningDB`;
 const latestVersion = 1;
@@ -6,44 +7,46 @@ const latestVersion = 1;
 const fieldOf = <T>(x: keyof T & string): string => x;
 
 type LearnableObject = {
-  tokens: KeyToken[];
-  type: number;
-  parent?: number;
+  primaryKey: [KeyToken[], UID];
 };
 
 const learnableObjectStore = {
   name: "Learnables",
-  tokensIndex: "Tokens",
 };
 
-type LearnableTypeObject = {
+type InformationTypeObject = {
+  primaryKey: UID;
   name: string;
 };
 
-const learnableTypeObjectStore = {
-  name: "LearnableTypes",
+const informationTypeObjectStore = {
+  name: "InformationTypes",
+};
+
+type InformationObject = {
+  primaryKey: UID;
+  type: UID;
+  summary: string;
+};
+
+const informationObjectStore = {
+  name: "Information",
 };
 
 function updateDb(this: IDBOpenDBRequest, ev: IDBVersionChangeEvent) {
   const db = (ev.target as IDBOpenDBRequest).result;
 
-  if (ev.oldVersion < 1) {
-    const learnables = db.createObjectStore(learnableObjectStore.name, {
-      autoIncrement: true,
-    });
-    learnables.createIndex(
-      learnableObjectStore.tokensIndex,
-      fieldOf<LearnableObject>("tokens"),
-      { unique: false }
-    );
-
-    db.createObjectStore(learnableTypeObjectStore.name, {
-      autoIncrement: true,
-    });
-
-    // TODO create default learnable types?
+  if (ev.oldVersion < latestVersion) {
+    db.createObjectStore(learnableObjectStore.name);
+    db.createObjectStore(informationTypeObjectStore.name);
+    db.createObjectStore(informationObjectStore.name);
   }
 }
+
+export type MatchedLearnable = {
+  tokenLength: number;
+  information: UID;
+};
 
 export class DB {
   private constructor(private readonly db: IDBDatabase) {}
@@ -58,26 +61,33 @@ export class DB {
       req.onsuccess = () => res(new DB(req.result));
     });
 
-  atStartOf = (tokens: KeyToken[]): Promise<[number, LearnableObject][]> =>
+  atStartOf = (tokens: KeyToken[]): Promise<MatchedLearnable[]> =>
     new Promise((res, rej) => {
       if (tokens.length === 0) throw new Error(`No tokens provided`);
 
       const tx = this.db.transaction(learnableObjectStore.name, "readonly");
       const learnables = tx.objectStore(learnableObjectStore.name);
-      const ix = learnables.index(learnableObjectStore.tokensIndex);
 
-      const req = ix.openCursor(IDBKeyRange.lowerBound(tokens.slice(0, 1)));
-      const matching: [number, LearnableObject][] = [];
+      const matching: MatchedLearnable[] = [];
+
+      const req = learnables.openKeyCursor(
+        IDBKeyRange.lowerBound([[tokens[0]]])
+      );
 
       req.onerror = rej;
       req.onsuccess = () => {
         if (!req.result) return res(matching);
 
-        const learnable: LearnableObject = req.result.value;
-        if (keyStartsWith(tokens, learnable.tokens))
-          matching.push([req.result.primaryKey as number, learnable]);
+        const [learnableTokens, infoId] = req.result
+          .primaryKey as LearnableObject["primaryKey"];
 
-        if (tokens[0] === learnable.tokens[0]) req.result.continue();
+        if (keyStartsWith(tokens, learnableTokens))
+          matching.push({
+            tokenLength: learnableTokens.length,
+            information: infoId,
+          });
+
+        if (tokens[0] === learnableTokens[0]) req.result.continue();
         else return res(matching);
       };
     });
