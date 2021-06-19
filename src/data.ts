@@ -9,3 +9,12 @@ export const keyStartsWith = (keys: KeyToken[], start: KeyToken[]) =>
   start.length <= keys.length && start.every((k, idx) => k === keys[idx]);
 
 export type Learnable = [KeyToken[], TypedUID<"Information">];
+
+export type DisplayToken = {
+  text: string;
+  key: KeyToken;
+};
+
+export function tokenIsWhitespace(token: KeyToken) {
+  return token === " ";
+}

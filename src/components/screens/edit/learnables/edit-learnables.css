@@ -1,0 +1,66 @@
+.edit-learnables-screen {
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+
+.edit-learnables-screen > nav {
+  background-color: hsl(0, 0%, 90%);
+}
+
+.edit-learnables-screen > nav > ._back {
+  margin: 8px;
+}
+
+.edit-learnables-screen > section {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+
+  overflow-y: scroll;
+}
+
+.edit-learnables-screen._length > section > ._sentence {
+  font-size: 32px;
+  font-weight: normal;
+  color: hsl(0, 0%, 0%);
+  padding: 8px;
+  text-align: justify;
+}
+
+.edit-learnables-screen._length > section > ._sentence > ._selected {
+  background-color: hsl(0, 0%, 75%);
+  border-radius: 8px;
+}
+
+.edit-learnables-screen._length > section > ._controls {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.edit-learnables-screen._length > section > ._controls > button {
+  margin: 0 4px;
+}
+
+.edit-learnables-screen._length > section > ._continue {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  margin: 16px 8px;
+}
+
+.edit-learnables-screen._length > section > ._continue > button {
+  appearance: none;
+  cursor: pointer;
+  border: 0;
+  border-radius: 8px;
+  padding: 8px 32px;
+
+  background-color: hsl(0, 0%, 75%);
+  color: hsl(0, 0%, 0%);
+  font-size: 20px;
+  font-weight: bold;
+}
