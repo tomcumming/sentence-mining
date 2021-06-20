@@ -6,3 +6,31 @@
 .edit-learnables-screen-choose > section {
   overflow-y: scroll;
 }
+
+.edit-learnables-screen-choose > section > ._sentence {
+  font-size: 32px;
+  font-weight: normal;
+  color: hsl(0, 0%, 0%);
+  padding: 8px;
+}
+
+.edit-learnables-screen-choose__mark {
+  display: inline-flex;
+  margin-bottom: 2px;
+
+  border-bottom: 4px solid transparent;
+}
+
+.edit-learnables-screen-choose__mark._start {
+  border-end-start-radius: 5px;
+}
+
+.edit-learnables-screen-choose__mark._end {
+  border-end-end-radius: 5px;
+}
+
+.edit-learnables-screen-choose__mark > ._token,
+.edit-learnables-screen-choose > section > ._sentence > ._token {
+  white-space: pre;
+  line-height: 1.1;
+}

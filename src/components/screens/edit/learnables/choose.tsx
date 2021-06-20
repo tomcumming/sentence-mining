@@ -11,7 +11,7 @@ import {
   UIDStr,
 } from "../../../../data";
 
-import { markers } from "./markers";
+import { Marker, markers } from "./markers";
 
 import RoundBtn from "../../../round-btn";
 
@@ -35,6 +35,46 @@ function orderInformationType(informationTypes: Props["informationTypes"]) {
   };
 }
 
+function MarkedToken({
+  token,
+  informationTypes,
+  marks,
+}: {
+  token: DisplayToken;
+  informationTypes: Props["informationTypes"];
+  marks: ("space" | Marker)[];
+}) {
+  if (marks.length === 0) return <span className="_token">{token.text}</span>;
+
+  const mark = marks[0];
+  const infoType =
+    mark === "space" ? undefined : informationTypes.get(uidStr(mark.info.type));
+
+  const classNames = `${mark === "space" || !mark.start ? "" : "_start"} ${
+    mark === "space" || !mark.end ? "" : "_end"
+  }`;
+
+  return (
+    <span
+      className={`edit-learnables-screen-choose__mark ${classNames}`}
+      data-info={mark === "space" ? false : mark.info.summary}
+      style={
+        infoType
+          ? {
+              borderColor: `hsl(var(--theme-color-${infoType.themeColor}), 100%, 50%)`,
+            }
+          : undefined
+      }
+    >
+      <MarkedToken
+        token={token}
+        informationTypes={informationTypes}
+        marks={marks.slice(1)}
+      />
+    </span>
+  );
+}
+
 function Sentence({
   tokens,
   selected,
@@ -50,9 +90,18 @@ function Sentence({
     [tokens, selected, orderInformationType]
   );
 
-  console.log({ marks });
-
-  return <div className="_sentence">{tokens.map((t) => t.text).join("")}</div>;
+  return (
+    <div className="_sentence">
+      {tokens.map((tkn, idx) => (
+        <MarkedToken
+          key={idx}
+          token={tkn}
+          marks={marks[idx].slice().reverse()}
+          informationTypes={informationTypes}
+        />
+      ))}
+    </div>
+  );
 }
 
 export default function ChooseLearnablesScreen({
