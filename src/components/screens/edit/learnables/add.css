@@ -1,17 +1,17 @@
-.edit-learnables-screen {
+.edit-learnables-screen-add {
   display: grid;
   grid-template-rows: auto 1fr;
 }
 
-.edit-learnables-screen > nav {
+.edit-learnables-screen-add > nav {
   background-color: hsl(0, 0%, 90%);
 }
 
-.edit-learnables-screen > nav > ._back {
+.edit-learnables-screen-add > nav > ._back {
   margin: 8px;
 }
 
-.edit-learnables-screen > section {
+.edit-learnables-screen-add > section {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -20,7 +20,7 @@
   overflow-y: scroll;
 }
 
-.edit-learnables-screen._add > section > ._sentence {
+.edit-learnables-screen-add > section > ._sentence {
   font-size: 32px;
   font-weight: normal;
   color: hsl(0, 0%, 0%);
@@ -29,23 +29,23 @@
   text-align-last: center;
 }
 
-.edit-learnables-screen._add > section > ._sentence > ._selected {
+.edit-learnables-screen-add > section > ._sentence > ._selected {
   background-color: hsl(0, 0%, 75%);
   border-radius: 8px;
 }
 
-.edit-learnables-screen._add > section > ._controls {
+.edit-learnables-screen-add > section > ._controls {
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
 }
 
-.edit-learnables-screen._add > section > ._controls > button {
+.edit-learnables-screen-add > section > ._controls > button {
   margin: 0 4px;
 }
 
-.edit-learnables-screen._add > section > ._continue {
+.edit-learnables-screen-add > section > ._continue {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -53,7 +53,7 @@
   margin: 16px 8px;
 }
 
-.edit-learnables-screen._add > section > ._types {
+.edit-learnables-screen-add > section > ._types {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -61,13 +61,13 @@
   gap: 8px;
 }
 
-.edit-learnables-screen._add > section > ._summary {
+.edit-learnables-screen-add > section > ._summary {
   margin: 8px;
   min-height: 48px;
   box-sizing: content-box;
 }
 
-.edit-learnables-screen._add > section > ._finish-buttons {
+.edit-learnables-screen-add > section > ._finish-buttons {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;

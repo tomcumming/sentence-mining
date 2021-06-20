@@ -3,7 +3,8 @@
 @import "./components/screens/review/test/test.css";
 @import "./components/screens/review/assess/assess.css";
 
-@import "./components/screens/edit/learnables/edit-learnables.css";
+@import "./components/screens/edit/learnables/add.css";
+@import "./components/screens/edit/learnables/choose.css";
 
 @import "./components/round-btn/round-btn.css";
 

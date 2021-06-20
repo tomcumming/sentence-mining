@@ -1,0 +1,8 @@
+.edit-learnables-screen-choose {
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+
+.edit-learnables-screen-choose > section {
+  overflow-y: scroll;
+}

@@ -1,9 +1,8 @@
 import * as React from "react";
 import {
   DisplayToken,
-  LearnableType,
+  InformationType,
   tokenIsWhitespace,
-  TypedUID,
 } from "../../../../data";
 
 import RoundBtn from "../../../round-btn";
@@ -13,10 +12,10 @@ export type Props = {
 
   tokens: DisplayToken[];
   offset: number;
-  learnableTypes: LearnableType[];
+  informationTypes: InformationType[];
 };
 
-type SetSummaryState = { length: number; type: LearnableType };
+type SetSummaryState = { length: number; type: InformationType };
 
 type State =
   | { setLength: true }
@@ -82,12 +81,12 @@ function SetType({
   tokens,
   offset,
   length,
-  learnableTypes,
+  informationTypes,
   onSetType,
 }: {
   length: number;
-  onSetType: (length: number, type: LearnableType) => void;
-} & Pick<Props, "offset" | "tokens" | "learnableTypes">) {
+  onSetType: (length: number, type: InformationType) => void;
+} & Pick<Props, "offset" | "tokens" | "informationTypes">) {
   const selectedTokens = React.useMemo(
     () => tokens.slice(offset, offset + length),
     [tokens, offset, length]
@@ -100,17 +99,17 @@ function SetType({
       </div>
 
       <div className="_types">
-        {learnableTypes.map((lt) => (
+        {informationTypes.map((it) => (
           <button
-            key={lt.uid.toString()}
-            data-uid={lt.uid}
+            key={it.uid.toString()}
+            data-uid={it.uid}
             className={`basic-button`}
             style={{
-              backgroundColor: `hsl(var(--theme-color-${lt.themeColor}), 100%, 70%)`,
+              backgroundColor: `hsl(var(--theme-color-${it.themeColor}), 100%, 70%)`,
             }}
-            onClick={() => onSetType(length, lt)}
+            onClick={() => onSetType(length, it)}
           >
-            {lt.name}
+            {it.name}
           </button>
         ))}
       </div>
@@ -164,7 +163,7 @@ export default function AddLearnableScreen({
   onBack,
   tokens,
   offset,
-  learnableTypes,
+  informationTypes,
 }: Props) {
   const [state, setState] = React.useState<State>({ setLength: true });
 
@@ -174,14 +173,14 @@ export default function AddLearnableScreen({
   );
 
   const onSetType = React.useCallback(
-    (length: number, type: LearnableType) =>
+    (length: number, type: InformationType) =>
       setState({ setSummary: { length, type } }),
     []
   );
 
   return (
-    <main className="edit-learnables-screen _add">
-      <nav>
+    <main className="edit-learnables-screen-add">
+      <nav className="basic-nav">
         <RoundBtn icon="🔙" onClick={onBack} className="_back" />
       </nav>
       {"setLength" in state && (
@@ -192,7 +191,7 @@ export default function AddLearnableScreen({
           tokens={tokens}
           offset={offset}
           length={state.setType.length}
-          learnableTypes={learnableTypes}
+          informationTypes={informationTypes}
           onSetType={onSetType}
         />
       )}
