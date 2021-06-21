@@ -1,16 +1,9 @@
 import * as ReactDOM from "react-dom";
 import * as React from "react";
 
-import AddLearnableScreen from "./components/screens/edit/learnables/add";
+import { DisplayToken, InformationType, uidStr } from "./data";
 
-import { DB } from "./db";
-import { DisplayToken, LearnableType } from "./data";
-
-/*
-DB.load().then((db) => {
-  console.log("Database loaded", db);
-});
-*/
+import EditLearnablesScreen from "./components/screens/edit/learnables";
 
 const chineseTokens: DisplayToken[] = [
   "小",
@@ -39,7 +32,7 @@ const chineseTokens: DisplayToken[] = [
   "家",
 ].map((key) => ({ key, text: key }));
 
-const learnableTypes: LearnableType[] = [
+const informationTypes: InformationType[] = [
   {
     uid: "1" as any,
     shortName: "Def",
@@ -50,32 +43,26 @@ const learnableTypes: LearnableType[] = [
   {
     uid: "2" as any,
     shortName: "Init",
-    name: "Initial Reading",
+    name: "Reading",
     sortOrder: 2,
-    themeColor: 2,
-  },
-  {
-    uid: "3" as any,
-    shortName: "Fin",
-    name: "Final Reading",
-    sortOrder: 3,
     themeColor: 3,
   },
   {
-    uid: "4" as any,
+    uid: "3" as any,
     shortName: "Tone",
     name: "Tone",
-    sortOrder: 4,
-    themeColor: 4,
+    sortOrder: 3,
+    themeColor: 5,
   },
 ];
 
 ReactDOM.render(
-  <AddLearnableScreen
+  <EditLearnablesScreen
     onBack={() => console.info("Back pressed")}
     tokens={chineseTokens}
-    offset={4}
-    learnableTypes={learnableTypes}
+    infoTypes={new Map(informationTypes.map((it) => [uidStr(it.uid), it]))}
+    info={new Map()}
+    available={new Set()}
   />,
   document.getElementById("app")
 );

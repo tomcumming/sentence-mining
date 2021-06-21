@@ -7,11 +7,20 @@
   overflow-y: scroll;
 }
 
+.edit-learnables-screen-choose > section > ._token-nav {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
 .edit-learnables-screen-choose > section > ._sentence {
   font-size: 32px;
   font-weight: normal;
   color: hsl(0, 0%, 0%);
   padding: 8px;
+  text-align: center;
 }
 
 .edit-learnables-screen-choose__mark {
@@ -29,8 +38,12 @@
   border-end-end-radius: 5px;
 }
 
-.edit-learnables-screen-choose__mark > ._token,
-.edit-learnables-screen-choose > section > ._sentence > ._token {
+.edit-learnables-screen-choose__token {
   white-space: pre;
   line-height: 1.1;
+}
+
+.edit-learnables-screen-choose__token._current {
+  background-color: hsl(0, 0%, 80%);
+  border-radius: 8px;
 }

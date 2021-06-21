@@ -3,6 +3,7 @@
 @import "./components/screens/review/test/test.css";
 @import "./components/screens/review/assess/assess.css";
 
+@import "./components/screens/edit/learnables/index.css";
 @import "./components/screens/edit/learnables/add.css";
 @import "./components/screens/edit/learnables/choose.css";
 

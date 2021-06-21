@@ -15,10 +15,17 @@ import { Marker, markers } from "./markers";
 
 import RoundBtn from "../../../round-btn";
 
+type Parent = {
+  tokens: DisplayToken[];
+  infoType: TypedUID<"InformationType">;
+};
+
 export type Props = {
   onBack: () => void;
+  onPrevToken?: () => void;
+  onNextToken?: () => void;
 
-  parent?: Learnable;
+  parents: Parent[];
   tokens: DisplayToken[];
   currentIdx: number;
 
@@ -26,7 +33,9 @@ export type Props = {
   selected: Set<{ off: Offset; len: Length; info: Information }>;
 };
 
-function orderInformationType(informationTypes: Props["informationTypes"]) {
+export function orderInformationType(
+  informationTypes: Props["informationTypes"]
+) {
   return (a: TypedUID<"InformationType">, b: TypedUID<"InformationType">) => {
     const it1 = informationTypes.get(uidStr(a));
     const it2 = informationTypes.get(uidStr(b));
@@ -39,12 +48,23 @@ function MarkedToken({
   token,
   informationTypes,
   marks,
+  current,
 }: {
   token: DisplayToken;
   informationTypes: Props["informationTypes"];
   marks: ("space" | Marker)[];
+  current: boolean;
 }) {
-  if (marks.length === 0) return <span className="_token">{token.text}</span>;
+  if (marks.length === 0)
+    return (
+      <span
+        className={`edit-learnables-screen-choose__token ${
+          current ? "_current" : ""
+        }`}
+      >
+        {token.text}
+      </span>
+    );
 
   const mark = marks[0];
   const infoType =
@@ -70,6 +90,7 @@ function MarkedToken({
         token={token}
         informationTypes={informationTypes}
         marks={marks.slice(1)}
+        current={current}
       />
     </span>
   );
@@ -79,15 +100,16 @@ function Sentence({
   tokens,
   selected,
   informationTypes,
-}: {} & Pick<Props, "tokens" | "selected" | "informationTypes">) {
+  currentIdx,
+}: Pick<Props, "currentIdx" | "tokens" | "selected" | "informationTypes">) {
   const orderInfoType = React.useCallback(
     orderInformationType(informationTypes),
-    []
+    [informationTypes]
   );
 
   const marks = React.useMemo(
     () => Array.from(markers(orderInfoType, selected, tokens.length)),
-    [tokens, selected, orderInformationType]
+    [tokens, selected, orderInfoType]
   );
 
   return (
@@ -98,17 +120,21 @@ function Sentence({
           token={tkn}
           marks={marks[idx].slice().reverse()}
           informationTypes={informationTypes}
+          current={idx === currentIdx}
         />
       ))}
     </div>
   );
 }
 
-export default function ChooseLearnablesScreen({
+export function ChooseLearnablesScreen({
   onBack,
+  onPrevToken,
+  onNextToken,
   tokens,
   selected,
   informationTypes,
+  currentIdx,
 }: Props) {
   return (
     <main className="edit-learnables-screen-choose">
@@ -120,7 +146,12 @@ export default function ChooseLearnablesScreen({
           tokens={tokens}
           selected={selected}
           informationTypes={informationTypes}
+          currentIdx={currentIdx}
         />
+        <div className="_token-nav">
+          <RoundBtn icon="⬅️" onClick={onPrevToken} />
+          <RoundBtn icon="➡️" onClick={onNextToken} />
+        </div>
       </section>
     </main>
   );

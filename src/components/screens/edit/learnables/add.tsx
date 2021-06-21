@@ -7,6 +7,25 @@ import {
 
 import RoundBtn from "../../../round-btn";
 
+export function moveCurrent(
+  tokens: DisplayToken[],
+  current: number,
+  delta: -1 | 1
+): undefined | number {
+  if (delta === 1) {
+    if (
+      tokens.length > current + 2 &&
+      tokenIsWhitespace(tokens[current + 1].key)
+    )
+      return current + 2;
+    else if (tokens.length > current + 1) return current + 1;
+  } else if (delta === -1) {
+    if (current > 1 && tokenIsWhitespace(tokens[current - 1].key))
+      return current - 2;
+    else if (current >= 1) return current - 1;
+  }
+}
+
 export type Props = {
   onBack: () => void;
 
@@ -29,7 +48,9 @@ function SetLength({
 }: {
   onSetLength: (length: number) => void;
 } & Pick<Props, "tokens" | "offset">) {
-  const [length, setLength] = React.useState(1);
+  const [end, setEnd] = React.useState(1);
+
+  const length = end - offset + 1;
 
   const [before, selected, after] = React.useMemo(
     () => [
@@ -41,18 +62,13 @@ function SetLength({
   );
 
   const onSub = React.useCallback(() => {
-    if (length > 2 && tokenIsWhitespace(tokens[offset + length - 2].key))
-      setLength(length - 2);
-    else if (length > 1) setLength(length - 1);
+    const nextEnd = moveCurrent(tokens, end, -1);
+    if (nextEnd !== undefined && nextEnd >= offset) setEnd(nextEnd);
   }, [tokens, offset, length]);
 
   const onAdd = React.useCallback(() => {
-    if (
-      tokens.length > offset + length + 1 &&
-      tokenIsWhitespace(tokens[offset + length].key)
-    )
-      setLength(length + 2);
-    else if (tokens.length > offset + length) setLength(length + 1);
+    const nextEnd = moveCurrent(tokens, end, 1);
+    if (nextEnd !== undefined) setEnd(nextEnd);
   }, [tokens, offset, length]);
 
   return (
