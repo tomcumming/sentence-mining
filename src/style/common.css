@@ -16,6 +16,11 @@
   font-weight: bold;
 }
 
+.basic-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
 .basic-textarea {
   appearance: none;
   border-radius: 8px;
