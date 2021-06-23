@@ -1,36 +1,14 @@
 import * as ReactDOM from "react-dom";
 import * as React from "react";
 
+import { AppState } from "logic/state";
+import { act } from "logic/act";
+import { Action } from "logic/action";
+import * as Eff from "logic/effect";
+
 import { DisplayToken, InformationType, uidStr } from "./data";
 
-import EditLearnablesScreen from "./components/screens/edit/learnables";
-
-const chineseTokens: DisplayToken[] = [
-  "小",
-  "惠",
-  "因",
-  "區",
-  "水",
-  "蠟",
-  "樹",
-  " ",
-  "街",
-  "4",
-  "號",
-  "是",
-  "哈",
-  "利",
-  "波",
-  "特",
-  "姨",
-  "姨",
-  "，",
-  "德",
-  "斯",
-  "禮",
-  "一",
-  "家",
-].map((key) => ({ key, text: key }));
+import App from "components/app";
 
 const informationTypes: InformationType[] = [
   {
@@ -56,13 +34,33 @@ const informationTypes: InformationType[] = [
   },
 ];
 
-ReactDOM.render(
-  <EditLearnablesScreen
-    onBack={() => console.info("Back pressed")}
-    tokens={chineseTokens}
-    infoTypes={new Map(informationTypes.map((it) => [uidStr(it.uid), it]))}
-    info={new Map()}
-    available={new Set()}
-  />,
-  document.getElementById("app")
-);
+const exampleSentence = "小惠因區水蠟樹 街4號是哈利波特姨姨，德斯禮一家";
+
+const runTime: Eff.ConsoleEff = {
+  warn(msg) {
+    console.warn(msg);
+  },
+
+  die(msg) {
+    throw new Error(msg);
+  },
+};
+
+const wrapperElement = document.getElementById("app");
+
+let state: AppState = {
+  editSentence: {
+    input: true,
+  },
+};
+
+function render() {
+  ReactDOM.render(<App state={state} onAction={onAction} />, wrapperElement);
+}
+
+async function onAction(action: Action) {
+  state = await act(state, action)(runTime);
+  render();
+}
+
+onAction({ inputSentenceText: { sentence: exampleSentence } });
