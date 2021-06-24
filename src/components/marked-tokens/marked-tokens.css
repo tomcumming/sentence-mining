@@ -1,0 +1,32 @@
+.marked-tokens {
+  font-size: 32px;
+  font-weight: normal;
+  color: hsl(0, 0%, 0%);
+  padding: 8px;
+  text-align: center;
+}
+
+.marked-tokens__mark {
+  display: inline-flex;
+  margin-bottom: 2px;
+
+  border-bottom: 4px solid transparent;
+}
+
+.marked-tokens__mark._start {
+  border-end-start-radius: 5px;
+}
+
+.marked-tokens__mark._end {
+  border-end-end-radius: 5px;
+}
+
+.marked-tokens__token {
+  white-space: pre;
+  line-height: 1.1;
+}
+
+.marked-tokens__token._current {
+  background-color: hsl(0, 0%, 80%);
+  border-radius: 8px;
+}
