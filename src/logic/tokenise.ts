@@ -43,7 +43,7 @@ export default function* tokeniseSentence(
 
     // this will fail for multibyte punct like emoji
     const punct = remaining.slice(0, 1);
-    remaining = remaining.slice(1, 0);
+    remaining = remaining.slice(1);
     yield { key: norm(punct), text: punct };
   }
 }

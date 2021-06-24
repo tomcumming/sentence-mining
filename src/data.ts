@@ -19,6 +19,10 @@ export const keyStartsWith = (keys: KeyToken[], start: KeyToken[]) =>
 
 export type Learnable = [KeyToken[], TypedUID<"Information">];
 
+export function learnableKeyStr([ts, id]: Learnable): string {
+  return `${JSON.stringify(ts)}${uidStr(id)}`;
+}
+
 export type DisplayToken = {
   text: string;
   key: KeyToken;

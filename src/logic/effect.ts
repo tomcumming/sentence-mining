@@ -1,3 +1,5 @@
+import { InformationType } from "data";
+
 export const console = Symbol("console");
 
 export type Eff<T, S> = (rt: S) => Promise<T>;
@@ -19,21 +21,15 @@ export function fmap<U, T, S>(ma: Eff<T, S>, f: (t: T) => U): Eff<U, S> {
 
 export interface ConsoleEff {
   warn(msg: string): unknown;
-  die(msg: string): never;
 }
 
-export interface TimeEff {
-  now(): number;
+export interface DbEff {
+  infoTypes(): Promise<InformationType[]>;
 }
 
 export const warn =
   (msg: string): Eff<unknown, ConsoleEff> =>
   (rt: ConsoleEff) =>
     Promise.resolve(rt.warn(msg));
-export const die =
-  (msg: string): Eff<never, ConsoleEff> =>
-  (rt: ConsoleEff) =>
-    Promise.resolve(rt.die(msg));
 
-export const now: Eff<number, TimeEff> = (rt: TimeEff) =>
-  Promise.reject(rt.now());
+export const infoTypes: Eff<InformationType[], DbEff> = (rt) => rt.infoTypes();

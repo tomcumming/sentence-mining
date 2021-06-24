@@ -2,84 +2,101 @@ import * as States from "./state";
 import * as Actions from "./action";
 import * as Eff from "./effect";
 import tokeniseSentence from "./tokenise";
-import { Offset, tokenIsWhitespace } from "../data";
+import { KeyToken, Offset, tokenIsWhitespace, uidStr } from "../data";
 
-export function moveCurrentTokenPositions(state: States.MarkTokens): {
+export function moveCurrentTokenPositions(
+  tokens: KeyToken[],
+  pos: Offset
+): {
   prev?: Offset;
   next?: Offset;
 } {
-  const tsLen = state.tokens.length;
+  const tsLen = tokens.length;
   const prev =
-    state.pos > 1 && tokenIsWhitespace(state.tokens[state.pos - 1].key)
-      ? state.pos - 2
-      : state.pos > 0 // should never start with ws
-      ? state.pos - 1
+    pos > 1 && tokenIsWhitespace(tokens[pos - 1])
+      ? pos - 2
+      : pos > 0 // should never start with ws
+      ? pos - 1
       : undefined;
   const next =
-    state.pos < tsLen - 2 && tokenIsWhitespace(state.tokens[state.pos + 1].key)
-      ? state.pos + 2
-      : state.pos < tsLen - 1
-      ? state.pos + 1
+    pos < tsLen - 2 && tokenIsWhitespace(tokens[pos + 1])
+      ? pos + 2
+      : pos < tsLen - 1
+      ? pos + 1
       : undefined;
   return { prev, next };
 }
 
-export const inputSentenceText = (
-  state: States.AppState,
+export function inputSentenceText(
+  _state: States.AppState,
   action: Actions.InputSentenceText
-): Eff.Eff<States.AppState, Eff.ConsoleEff> =>
-  `editSentence` in state && `input` in state.editSentence
-    ? Eff.pure<States.AppState>({
-        editSentence: {
-          mark: {
-            adding: [],
-            sentence: {
-              tokens: Array.from(tokeniseSentence(action.sentence)),
-              pos: 0,
-              selected: new Set(),
-            },
-          },
-        },
-      })
-    : Eff.fmap(Eff.warn(`Not editing a sentence`), () => state);
+): Eff.Eff<States.AppState, Eff.DbEff> {
+  const tokens = Array.from(tokeniseSentence(action.sentence));
+  return Eff.bind(Eff.infoTypes, (infoTypes) =>
+    Eff.pure<States.AppState>({
+      editSentence: {
+        mark: {
+          infoTypes: new Map(infoTypes.map((it) => [uidStr(it.uid), it])),
 
-export const moveCurrentToken = (
+          root: { sentence: tokens },
+          layers: [],
+
+          editState: { markToken: 0 },
+        },
+      },
+    })
+  );
+}
+
+export function moveCurrentToken(
   state: States.AppState,
   action: Actions.MoveCurrentToken
-): Eff.Eff<States.AppState, Eff.ConsoleEff> =>
-  `editSentence` in state && `mark` in state.editSentence
-    ? Eff.fmap(
-        moveCurrentTokenMark(state.editSentence.mark, action),
-        (mark) => ({
+): Eff.Eff<States.AppState, Eff.ConsoleEff> {
+  if (`editSentence` in state && `mark` in state.editSentence) {
+    const mark = state.editSentence.mark;
+    return Eff.bind(
+      moveCurrentTokenMark(state.editSentence.mark, action),
+      (editState) =>
+        Eff.pure<States.AppState>({
           ...state,
           editSentence: {
             ...state.editSentence,
-            mark,
+            mark: {
+              ...mark,
+              editState,
+            },
           },
         })
-      )
-    : Eff.fmap(Eff.warn("Not marking sentence"), () => state);
+    );
+  }
+  return Eff.fmap(Eff.warn(`Not marking tokens`), () => state);
+}
 
 const moveCurrentTokenMark = (
-  state: States.MarkSentence,
+  state: States.MarkTokens,
   action: Actions.MoveCurrentToken
-): Eff.Eff<States.MarkSentence, Eff.ConsoleEff> => {
-  const { prev, next } = moveCurrentTokenPositions(state.sentence);
-  if (action.delta === -1 && prev !== undefined)
-    return Eff.pure({
-      ...state,
-      sentence: {
-        ...state.sentence,
-        pos: prev,
-      },
-    });
-  else if (action.delta === 1 && next !== undefined)
-    return Eff.pure({
-      ...state,
-      sentence: {
-        ...state.sentence,
-        pos: next,
-      },
-    });
-  else return Eff.fmap(Eff.warn("Invalid move"), () => state);
+): Eff.Eff<States.MarkTokens["editState"], Eff.ConsoleEff> => {
+  if (`markToken` in state.editState) {
+    const topLayer =
+      state.layers.length > 0
+        ? state.layers[state.layers.length - 1]
+        : undefined;
+    const keyTokens =
+      topLayer === undefined
+        ? `sentence` in state.root
+          ? state.root.sentence.map((dt) => dt.key)
+          : state.root.learnable[0]
+        : topLayer.learnable[0];
+
+    const { prev, next } = moveCurrentTokenPositions(
+      keyTokens,
+      state.editState.markToken
+    );
+    if (action.delta === 1 && next !== undefined)
+      return Eff.pure({ markToken: next });
+    else if (action.delta === -1 && prev !== undefined)
+      return Eff.pure({ markToken: prev });
+  }
+
+  return Eff.fmap(Eff.warn(`Can't move token`), () => state.editState);
 };
