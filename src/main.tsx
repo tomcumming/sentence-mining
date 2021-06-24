@@ -6,9 +6,12 @@ import { act } from "logic/act";
 import { Action } from "logic/action";
 import * as Eff from "logic/effect";
 
-import { DisplayToken, InformationType, uidStr } from "./data";
+import { DisplayToken, InformationType, TypedUID, uidStr } from "./data";
 
 import App from "components/app";
+
+import MarkedTokens from "components/marked-tokens";
+import tokeniseSentence from "logic/tokenise";
 
 const informationTypes: InformationType[] = [
   {
@@ -36,13 +39,13 @@ const informationTypes: InformationType[] = [
 
 const exampleSentence = "小惠因區水蠟樹 街4號是哈利波特姨姨，德斯禮一家";
 
-const runTime: Eff.ConsoleEff = {
+const runTime: Eff.ConsoleEff & Eff.DbEff = {
   warn(msg) {
     console.warn(msg);
   },
 
-  die(msg) {
-    throw new Error(msg);
+  infoTypes() {
+    return Promise.resolve(informationTypes);
   },
 };
 

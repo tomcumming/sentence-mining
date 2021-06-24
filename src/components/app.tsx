@@ -3,7 +3,7 @@ import * as React from "react";
 import { AppState } from "logic/state";
 import { Action } from "logic/action";
 
-import EditSentenceScreen from "./screens/edit/sentence";
+import MarkTokensScreen from "./screens/mark-tokens";
 
 export type Props = {
   state: AppState;
@@ -11,9 +11,9 @@ export type Props = {
 };
 
 function App({ state, onAction }: Props) {
-  if ("editSentence" in state) {
+  if ("editSentence" in state && `mark` in state.editSentence) {
     return (
-      <EditSentenceScreen onAction={onAction} state={state.editSentence} />
+      <MarkTokensScreen state={state.editSentence.mark} onAction={onAction} />
     );
   } else throw new Error("TODO");
 }
